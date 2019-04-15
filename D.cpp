@@ -3,6 +3,8 @@
 #include <list>
 using namespace std;
 
+const int PARENT = -100;
+
 enum colors{
     white,
     grey,
@@ -37,11 +39,11 @@ void ListGraph::GetNextVertices(int vertex, vector<int> &vertices) {
     vertices = graph[vertex];
 }
 
-void DFS(ListGraph& g, int vertex, vector<colors>& visited, vector<int>& timeStart, int parent, bool& flag) {
+void DFS(const ListGraph& g, int vertex, vector<colors>& visited, vector<int>& timeStart, int parent, bool& flag) {
     vector<int> children;
     g.GetNextVertices(vertex, children);
     visited[vertex] = grey;
-    if (parent == -100) {
+    if (parent == PARENT) {
         timeStart[vertex] = 1;
     } else {
         timeStart[vertex] = timeStart[parent] + 1;
@@ -62,7 +64,7 @@ void DFS(ListGraph& g, int vertex, vector<colors>& visited, vector<int>& timeSta
     visited[vertex] = black;
 }
 
-bool MainDFS(ListGraph& g) {
+bool MainDFS(const ListGraph& g) {
     int amount = g.VerticesCount();
     vector<int> time(amount, 0);
     bool flag = true;
