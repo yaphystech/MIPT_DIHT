@@ -4,6 +4,8 @@
 
 using namespace std;
 
+const int PARENT = -100;
+
 enum colors{
     white,
     grey,
@@ -33,15 +35,15 @@ int ListGraph::VerticesCount() {
     return graph.size();
 }
 
-void ListGraph::GetNextVertices(int vertex, vector<int> &vertices) {
+void ListGraph::GetNextVertices(int vertex, vector<int>&vertices) {
     vertices = graph[vertex];
 }
 
-void DFS(ListGraph& g, int vertex, vector<colors>& visited, vector<int>& timeStart, int parent, int& minLen) {
+void DFS(const ListGraph& g, int vertex, vector<colors>& visited, vector<int>& timeStart, int parent, int& minLen) {
     vector<int> children;
     g.GetNextVertices(vertex, children);
     visited[vertex] = grey;
-    if (parent == -100) {
+    if (parent == PARENT) {
         timeStart[vertex] = 1;
     } else {
         timeStart[vertex] = timeStart[parent] + 1;
@@ -64,7 +66,7 @@ void DFS(ListGraph& g, int vertex, vector<colors>& visited, vector<int>& timeSta
     visited[vertex] = black;
 }
 
-int MainDFS(ListGraph& g) {
+int FindMinCycle(const ListGraph& g) {
     int amount = g.VerticesCount();
     vector<int> time(amount, 0);
     int mincycle = amount * 2;
@@ -90,7 +92,7 @@ int main() {
         cin >> from >> to;
         graph.AddEdge(from, to);
     }
-    int mincycle = MainDFS(graph);
+    int mincycle = FindMinCycle(graph);
     printf("%d", mincycle);
     return 0;
 }
