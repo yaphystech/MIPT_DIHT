@@ -10,19 +10,16 @@ public:
     Listgraph(const int amount_of_vertices) {
         adjacency_list.resize(amount_of_vertices);
     }
-
     ~Listgraph() {}
 
     void AddEdge(int from, int to, int cost) {
         adjacency_list[from].push_back(make_pair(to, cost));
         adjacency_list[to].push_back(make_pair(from, cost));
     }
-
     int VerticesCount() const {
         return static_cast<int>(adjacency_list.size());
 
     }
-
     void GetNextVertices(int vertex, vector<pair<int, int>>& vertices) const {
         vertices.clear();
         for(auto i : adjacency_list[vertex]) {
@@ -39,7 +36,7 @@ private:
 class weighted_graph_algorithm {
 private:
     const Listgraph* graph;
-
+    
     class Priority_queue {
     private:
         vector<pair<int, int>> distance;
@@ -103,14 +100,14 @@ private:
                 sift_down(indexes[vertex]);
             }
         }
-
+        
         int extract_min() { // return number of nearest vertex
             std::swap(distance[0], distance[--current_size]);
             std::swap(indexes[distance[0].second],indexes[distance[current_size].second]);
             sift_down(0);
             return distance[current_size].second;
         }
-
+        
         void print(){
             for(int i = 0; i < current_size; ++i){
                 std::cout << distance[i].first<< ' ';
@@ -118,6 +115,7 @@ private:
             std::cout << std::endl;
         }
     };
+    
 public:
     weighted_graph_algorithm(const Listgraph* new_graph) {
         graph = new_graph;
