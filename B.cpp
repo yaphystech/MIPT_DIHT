@@ -4,8 +4,6 @@
 
 using namespace std;
 
-const int PARENT = -100;
-
 enum colors{
     white,
     grey,
@@ -19,7 +17,7 @@ public:
     ListGraph(const int& numberOfVertices);
     int VerticesCount();
     void AddEdge(const int& from, const int& to);
-    void GetNextVertices(const int& vertex, vector<int>& vertices);
+    void GetNextVertices(const int& vertex, vector<int> &vertices);
 };
 
 ListGraph::ListGraph(const int& numberOfVertices) {
@@ -35,15 +33,15 @@ int ListGraph::VerticesCount() {
     return graph.size();
 }
 
-void ListGraph::GetNextVertices(const int& vertex, vector<int>& vertices) {
+void ListGraph::GetNextVertices(const int& vertex, vector<int> &vertices) {
     vertices = graph[vertex];
 }
 
-void DFS(const ListGraph& g, int vertex, vector<colors>& visited, vector<int>& timeStart, int parent, int& minLen) {
+void DFS(ListGraph& g, const int& vertex, vector<colors>& visited, vector<int>& timeStart, const int& parent, int& minLen) {
     vector<int> children;
     g.GetNextVertices(vertex, children);
     visited[vertex] = grey;
-    if (parent == PARENT) {
+    if (parent == -100) {
         timeStart[vertex] = 1;
     } else {
         timeStart[vertex] = timeStart[parent] + 1;
@@ -66,7 +64,7 @@ void DFS(const ListGraph& g, int vertex, vector<colors>& visited, vector<int>& t
     visited[vertex] = black;
 }
 
-int FindMinCycle(const ListGraph& g) {
+int MainDFS(ListGraph& g) {
     int amount = g.VerticesCount();
     vector<int> time(amount, 0);
     int mincycle = amount * 2;
@@ -92,7 +90,7 @@ int main() {
         cin >> from >> to;
         graph.AddEdge(from, to);
     }
-    int mincycle = FindMinCycle(graph);
-    printf("%d", mincycle);
+    int mincycle = MainDFS(graph);
+    cout << mincycle;
     return 0;
 }
