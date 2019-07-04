@@ -16,17 +16,17 @@ class ListGraph{
 private:
     vector<vector<int>> graph;
 public:
-    ListGraph(int numberOfVertices);
+    ListGraph(const int& numberOfVertices);
     int VerticesCount();
-    void AddEdge(int from, int to);
-    void GetNextVertices(int vertex, vector<int> &vertices);
+    void AddEdge(const int& from, const int& to);
+    void GetNextVertices(const int& vertex, vector<int>& vertices);
 };
 
-ListGraph::ListGraph(int numberOfVertices) {
+ListGraph::ListGraph(const int& numberOfVertices) {
     graph.resize(numberOfVertices);
 }
 
-void ListGraph::AddEdge(int from, int to) {
+void ListGraph::AddEdge(const int& from, const int& to) {
     graph[from].push_back(to);
     graph[to].push_back(from);
 }
@@ -35,7 +35,7 @@ int ListGraph::VerticesCount() {
     return graph.size();
 }
 
-void ListGraph::GetNextVertices(int vertex, vector<int>&vertices) {
+void ListGraph::GetNextVertices(const int& vertex, vector<int>& vertices) {
     vertices = graph[vertex];
 }
 
