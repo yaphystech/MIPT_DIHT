@@ -1,97 +1,95 @@
 #include <iostream>
 #include <vector>
-#include <list>
-using namespace std;
 
-const int PARENT = -100;
+using std::vector, std::cin, std::cout;
 
-enum colors{
+enum Color{
     white,
     grey,
     black
 };
 
-class ListGraph{
+class MatrixGraph{
 private:
-    vector<vector<int>> graph;
+    vector<vector<short>> graph;
+    vector<short> timeOfVisit;
+    vector<Color> colors;
+
 public:
-    ListGraph(int numberOfVertices);
-    //~ListGraph();
+    MatrixGraph(const short& numberOfVertices);
     int VerticesCount();
-    void AddEdge(int from, int to);
-    void GetNextVertices(int vertex, vector<int> &vertices);
+    void AddEdge(const short& from, const short& to);
+    void GetNextVertices(const short& vertex, vector<short> &vertices, bool& flag);
+    void BFS (const short& vertex, short parent, bool& flag, vector<short>& currentLayer, vector<short>& nextLayer);
 };
 
-ListGraph::ListGraph(int numberOfVertices) {
+MatrixGraph::MatrixGraph(const short& numberOfVertices) {
     graph.resize(numberOfVertices);
+    timeOfVisit.assign(numberOfVertices, 0);
+    colors.assign(numberOfVertices, white);
 }
 
-void ListGraph::AddEdge(int from, int to) {
+void MatrixGraph::AddEdge(const short& from, const short& to) {
     graph[from].push_back(to);
     graph[to].push_back(from);
 }
 
-int ListGraph::VerticesCount() {
+int MatrixGraph::VerticesCount() {
     return graph.size();
 }
 
-void ListGraph::GetNextVertices(int vertex, vector<int> &vertices) {
-    vertices = graph[vertex];
-}
-
-void DFS(const ListGraph& g, int vertex, vector<colors>& visited, vector<int>& timeStart, int parent, bool& flag) {
-    vector<int> children;
-    g.GetNextVertices(vertex, children);
-    visited[vertex] = grey;
-    if (parent == PARENT) {
-        timeStart[vertex] = 1;
-    } else {
-        timeStart[vertex] = timeStart[parent] + 1;
-    }
-    for(int i = 0; i < children.size(); ++i) {
-        if (visited[children[i]] == white) {
-            DFS(g, children[i], visited, timeStart, vertex, flag);
+void MatrixGraph::GetNextVertices(const short& vertex, vector<short> &vertices, bool& flag) {
+    for(short i = 0; i < graph[vertex].size(); ++i) {
+        if (timeOfVisit[vertex] == timeOfVisit[graph[vertex][i]]) {
+            flag = false;
+            return;
         } else {
-            if (visited[children[i]] == grey && children[i] != parent) {
-                int curLen = timeStart[vertex] - timeStart[children[i]] + 1;
-                if(curLen % 2 !=0){
-                    flag = false;
-                    break;
-                }
+            if (colors[graph[vertex][i]] == white) {
+                vertices.push_back(graph[vertex][i]);
+                timeOfVisit[graph[vertex][i]] = timeOfVisit[vertex] + 1;
             }
         }
     }
-    visited[vertex] = black;
 }
 
-bool MainDFS(const ListGraph& g) {
-    int amount = g.VerticesCount();
-    vector<int> time(amount, 0);
-    bool flag = true;
-    for (int i = 0; i < amount; ++i) {
-        vector<colors> visited(amount, white);
-        if(flag){
-            DFS(g, i, visited, time, -100, flag);
+void MatrixGraph::BFS(const short& vertex, short parent, bool& flag, vector<short>& currentLayer, vector<short>& nextLayer) {
+    colors[vertex] = grey;
+    if (parent == -1) {
+        timeOfVisit[vertex] = 1;
+        currentLayer.push_back(vertex);
+    }
+    for (short i = 0; i < currentLayer.size(); ++i) {
+        GetNextVertices(currentLayer[i], nextLayer, flag);
+    }
+    if (!flag) {
+        return;
+    } else {
+        currentLayer = nextLayer;
+        nextLayer.clear();
+        for (short i = 0; i < currentLayer.size(); ++i) {
+            BFS(currentLayer[i], 1, flag, currentLayer, nextLayer);
         }
     }
-    return flag;
 }
 
-int main() {
-    int amountOfVertices = 0, amountOfEdges = 0;
+int main(){
+    short amountOfVertices = 0, amountOfEdges = 0;
+    bool flag = true;
+    vector<short> currentLayer;
+    vector<short> nextLayer;
     cin >> amountOfVertices;
     cin >> amountOfEdges;
-    ListGraph graph(amountOfVertices);
-    for (int i = 0; i < amountOfEdges; ++i) {
-        int from, to;
+    MatrixGraph graph(amountOfVertices);
+    for (short i = 0; i < amountOfEdges; ++i) {
+        short from, to;
         cin >> from >> to;
         graph.AddEdge(from, to);
     }
-    //cout << graph.VerticesCount();
-    if(MainDFS(graph)){
+    graph.BFS(0, -1, flag, currentLayer, nextLayer);
+    if (flag){
         cout << "YES";
-    }else{
+    } else {
         cout << "NO";
     }
-    return 0;
+    return  0;
 }
