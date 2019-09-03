@@ -1,82 +1,77 @@
 #include <iostream>
 #include <vector>
 
-using std::vector;
-using std::pair;
-using std::make_pair;
-using std::cin;
-using std::cout;
-using std::endl;
+using std::vector, std::pair, std::make_pair, std::cin, std::cout, std::endl, std::min;
 
-class Matrixgraph {
+class MatrixGraph {
+private:
+    vector<vector<int>> adjacencyMatrix;
 public:
-    void transitive_closure();
-    ~Matrixgraph() {};
-    Matrixgraph(const int& amount_of_vertices);
+    void TransitiveClosure();
+    ~MatrixGraph() {};
+    MatrixGraph(const int& amountOfVertices);
     void AddEdge(const int& from, const int& to, const int& cost);
     int VerticesCount() const;
     void GetNextVertices(const int& vertex, vector<pair<int, int>>& vertices) const;
-    void print();
-private:
-    vector<vector<int>> adjacency_matrix;
+    void Print() const;
 };
 
-void Matrixgraph::transitive_closure(){
-    auto& dist = adjacency_matrix;
+void MatrixGraph::TransitiveClosure(){
+    auto& dist = adjacencyMatrix;
     for(int k = 0; k < VerticesCount(); ++k){
         for(int i = 0; i < VerticesCount(); ++i){
             for(int j = 0; j < VerticesCount(); ++j){
-                dist[i][j] = std::min(dist[i][k] + dist[k][j], dist[i][j]);
+                dist[i][j] = min(dist[i][k] + dist[k][j], dist[i][j]);
             }
         }
     }
 }
 
-Matrixgraph::Matrixgraph(const int& amount_of_vertices){
-    adjacency_matrix.resize(amount_of_vertices);
-    for(int i = 0; i < amount_of_vertices; ++i){
-        adjacency_matrix[i].assign(amount_of_vertices, INT16_MAX);
+MatrixGraph::MatrixGraph(const int& amountOfVertices){
+    adjacencyMatrix.resize(amountOfVertices);
+    for(int i = 0; i < amountOfVertices; ++i){
+        adjacencyMatrix[i].assign(amountOfVertices, INT16_MAX);
     }
 }
 
-void Matrixgraph::AddEdge(const int& from, const int& to, const int& cost){
-    adjacency_matrix[from][to] = cost;
+void MatrixGraph::AddEdge(const int& from, const int& to, const int& cost){
+    adjacencyMatrix[from][to] = cost;
 }
 
-int Matrixgraph::VerticesCount() const{
-    return adjacency_matrix.size();
+int MatrixGraph::VerticesCount() const{
+    return adjacencyMatrix.size();
 }
 
-void Matrixgraph::GetNextVertices(const int& vertex, vector<pair<int, int>>& vertices) const {
+void MatrixGraph::GetNextVertices(const int& vertex, vector<pair<int, int>>& vertices) const {
     vertices.clear();
     for(int i = 0; i < VerticesCount(); ++i){
         if(i != INT16_MAX){
-            vertices.push_back(make_pair(i, adjacency_matrix[vertex][i]));
+            vertices.push_back(make_pair(i, adjacencyMatrix[vertex][i]));
         }
     }
 }
 
-void Matrixgraph::print(){
+void MatrixGraph::Print() const{
     for(int i = 0; i < VerticesCount(); ++i) {
         for(int j = 0; j < VerticesCount(); ++j) {
-            cout << ((adjacency_matrix[i][j] != INT16_MAX) ? adjacency_matrix[i][j] : 0) << ' ';
+            cout << ((adjacencyMatrix[i][j] != INT16_MAX) ? adjacencyMatrix[i][j] : 0) << ' ';
         }
         cout << endl;
     }
 }
 
 int main() {
-    int amount_of_vertices;
-    cin >> amount_of_vertices;
-    Matrixgraph graph(amount_of_vertices);
-    for(int i = 0; i < amount_of_vertices; ++i) {
-        for (int j = 0; j < amount_of_vertices; ++j) {
+    int amountOfVertices;
+    cin >> amountOfVertices;
+    MatrixGraph graph(amountOfVertices);
+    for(int i = 0; i < amountOfVertices; ++i) {
+        for (int j = 0; j < amountOfVertices; ++j) {
             int cost;
             cin >> cost;
             graph.AddEdge(i, j, cost);
         }
     }
-    graph.transitive_closure();
-    graph.print();
+    graph.TransitiveClosure();
+    graph.Print();
     return 0;
 }
