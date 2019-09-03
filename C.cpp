@@ -43,7 +43,7 @@ State::State (const int& d, const int& p) {
     paths = p;
 }
 
-int NumbersOfWays(const ListGraph myGraph, int& start, int& end) {
+int NumbersOfWays(const ListGraph& myGraph, int& start, int& end) {
     queue<int> bfsQueue; //стандартная очередь для BFS
     bfsQueue.push(start);
     vector<State> states(myGraph.VerticesCount(), State()); //хранит минимальную глубину и количество путей в i
