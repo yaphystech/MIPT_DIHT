@@ -20,7 +20,7 @@ public:
     int VerticesCount();
     void AddEdge(const short& from, const short& to);
     void GetNextVertices(const short& vertex, vector<short> &vertices, bool& flag);
-    void BFS (const short& vertex, short parent, bool& flag, vector<short>& currentLayer, vector<short>& nextLayer);
+    void BFS (short& vertex, short parent, bool& flag, vector<short>& currentLayer, vector<short>& nextLayer);
 };
 
 MatrixGraph::MatrixGraph(const short& numberOfVertices) {
@@ -52,7 +52,7 @@ void MatrixGraph::GetNextVertices(const short& vertex, vector<short> &vertices, 
     }
 }
 
-void MatrixGraph::BFS(const short& vertex, short parent, bool& flag, vector<short>& currentLayer, vector<short>& nextLayer) {
+void MatrixGraph::BFS(short& vertex, short parent, bool& flag, vector<short>& currentLayer, vector<short>& nextLayer) {
     colors[vertex] = grey;
     if (parent == -1) {
         timeOfVisit[vertex] = 1;
