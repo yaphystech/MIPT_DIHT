@@ -18,10 +18,10 @@ private:
 public:
     MatrixGraph(const short& numberOfVertices);
     int VerticesCount() const;
-    void GetNextVertices (const short& vertex, vector<short>& nextVertices) const;
-    void AddEdge(const short& from, const short& to);
-    void GetNextSuitableVertices(const short &vertex, vector<short> &vertices, bool &flag);
-    void BFS (const short& vertex, short parent, bool& flag, vector<short>& currentLayer, vector<short>& nextLayer);
+    void GetNextVertices (short vertex, vector<short>& nextVertices) const;
+    void AddEdge(short from, short to);
+    void GetNextSuitableVertices(short vertex, vector<short>& vertices, bool& flag);
+    void BFS (short vertex, short parent, bool& flag, vector<short>& currentLayer, vector<short>& nextLayer);
 };
 
 MatrixGraph::MatrixGraph(const short& numberOfVertices) {
@@ -30,7 +30,7 @@ MatrixGraph::MatrixGraph(const short& numberOfVertices) {
     colors.assign(numberOfVertices, white);
 }
 
-void MatrixGraph::AddEdge(const short& from, const short& to) {
+void MatrixGraph::AddEdge(short from, short to) {
     graph[from].push_back(to);
     graph[to].push_back(from);
 }
@@ -39,11 +39,11 @@ int MatrixGraph::VerticesCount() const{
     return graph.size();
 }
 
-void MatrixGraph::GetNextVertices(const short& vertex, vector<short>& nextVertices) const {
+void MatrixGraph::GetNextVertices(short vertex, vector<short>& nextVertices) const {
     nextVertices = graph[vertex];
 }
 
-void MatrixGraph::GetNextSuitableVertices(const short &vertex, vector<short> &vertices, bool &flag) {
+void MatrixGraph::GetNextSuitableVertices(short vertex, vector<short>& vertices, bool& flag) {
     for(short i = 0; i < graph[vertex].size(); ++i) {
         if (timeOfVisit[vertex] == timeOfVisit[graph[vertex][i]]) {
             flag = false;
@@ -57,7 +57,7 @@ void MatrixGraph::GetNextSuitableVertices(const short &vertex, vector<short> &ve
     }
 }
 
-void MatrixGraph::BFS(short& vertex, short parent, bool& flag, vector<short>& currentLayer, vector<short>& nextLayer) {
+void MatrixGraph::BFS(short vertex, short parent, bool& flag, vector<short>& currentLayer, vector<short>& nextLayer) {
     colors[vertex] = grey;
     if (parent == -1) {
         timeOfVisit[vertex] = 1;
