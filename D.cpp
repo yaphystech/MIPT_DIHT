@@ -16,7 +16,7 @@ private:
     vector<Color> colors;
 
 public:
-    MatrixGraph(const short& numberOfVertices);
+    MatrixGraph(short numberOfVertices);
     int VerticesCount() const;
     void GetNextVertices (short vertex, vector<short>& nextVertices) const;
     void AddEdge(short from, short to);
@@ -24,7 +24,7 @@ public:
     void BFS (short vertex, short parent, bool& flag, vector<short>& currentLayer, vector<short>& nextLayer);
 };
 
-MatrixGraph::MatrixGraph(const short& numberOfVertices) {
+MatrixGraph::MatrixGraph(short numberOfVertices) {
     graph.resize(numberOfVertices);
     timeOfVisit.assign(numberOfVertices, 0);
     colors.assign(numberOfVertices, white);
