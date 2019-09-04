@@ -17,10 +17,11 @@ private:
 
 public:
     MatrixGraph(const short& numberOfVertices);
-    int VerticesCount();
+    int VerticesCount() const;
+    void GetNextVertices (const short& vertex, vector<short>& nextVertices) const;
     void AddEdge(const short& from, const short& to);
-    void GetNextVertices(const short& vertex, vector<short> &vertices, bool& flag);
-    void BFS (short& vertex, short parent, bool& flag, vector<short>& currentLayer, vector<short>& nextLayer);
+    void GetNextSuitableVertices(const short &vertex, vector<short> &vertices, bool &flag);
+    void BFS (const short& vertex, short parent, bool& flag, vector<short>& currentLayer, vector<short>& nextLayer);
 };
 
 MatrixGraph::MatrixGraph(const short& numberOfVertices) {
@@ -34,11 +35,15 @@ void MatrixGraph::AddEdge(const short& from, const short& to) {
     graph[to].push_back(from);
 }
 
-int MatrixGraph::VerticesCount() {
+int MatrixGraph::VerticesCount() const{
     return graph.size();
 }
 
-void MatrixGraph::GetNextVertices(const short& vertex, vector<short> &vertices, bool& flag) {
+void MatrixGraph::GetNextVertices(const short& vertex, vector<short>& nextVertices) const {
+    nextVertices = graph[vertex];
+}
+
+void MatrixGraph::GetNextSuitableVertices(const short &vertex, vector<short> &vertices, bool &flag) {
     for(short i = 0; i < graph[vertex].size(); ++i) {
         if (timeOfVisit[vertex] == timeOfVisit[graph[vertex][i]]) {
             flag = false;
@@ -59,7 +64,7 @@ void MatrixGraph::BFS(short& vertex, short parent, bool& flag, vector<short>& cu
         currentLayer.push_back(vertex);
     }
     for (short i = 0; i < currentLayer.size(); ++i) {
-        GetNextVertices(currentLayer[i], nextLayer, flag);
+        GetNextSuitableVertices(currentLayer[i], nextLayer, flag);
     }
     if (!flag) {
         return;
@@ -72,7 +77,7 @@ void MatrixGraph::BFS(short& vertex, short parent, bool& flag, vector<short>& cu
     }
 }
 
-int main(){
+int main() {
     short amountOfVertices = 0, amountOfEdges = 0;
     bool flag = true;
     vector<short> currentLayer;
@@ -86,10 +91,10 @@ int main(){
         graph.AddEdge(from, to);
     }
     graph.BFS(0, -1, flag, currentLayer, nextLayer);
-    if (flag){
+    if (flag) {
         cout << "YES";
     } else {
         cout << "NO";
     }
-    return  0;
+    return 0;
 }
