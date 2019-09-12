@@ -7,7 +7,7 @@ class PriorityQueue {
 private:
     vector<pair<int, int>> queue; //первое - вершина(второй конец ребра), второе - масса ребра
     vector<int> indexOfEl; //позиция вершины в очереди
-    vector<bool> isVertexInQueue; //true - да, false - нет
+    vector<bool> isVertexInQueue; //1 - да, 0 - нет
     int curSize;
 public:
     PriorityQueue (const int& amountOfElements); //конструктор
@@ -92,83 +92,66 @@ void PriorityQueue::ChangePriority(const int& vertex, const int& weight) {
     }
 }
 
-class MatrixGraph {
+class ListGraph {
 private:
-    vector<vector<int>> graph;
+    vector<vector<pair<int, int>>> graph;
 public:
-    MatrixGraph (int amountOfVertices);
-    int VerticesCount();
+    ListGraph (int amountOfVertices);
+    int VerticesCount() const;
     void AddEdge (int from, int to, int weight);
-    void GetNextVertices (int vertex, vector<pair<int, int>>& nextVertices);
-    int MinOstWeight(int startVertex, int amountOfVertices);//считает вес минимального остовного
-    void AddAdjactencyEdgesToQueue(vector<pair<int, int>>& adjacentEdges, vector<bool>& isVisited, PriorityQueue& queue); //пробная функция, добавляет все рёбра из nextVertices в Priority Queue
-    void Print(int vertex);
+    void GetNextVertices (int vertex, vector<int>& nextVertices) const;
+    void GetAdjactencyEdges(int vertex, vector<pair<int, int>>& nextVertices) const;
+
+    int MinOstWeight(int startVertex, int amountOfVertices);//считает вес минимального остовного дерева
 };
 
-MatrixGraph::MatrixGraph (int amountOfVertices) {
-    graph.resize(amountOfVertices);
-    for (int i = 0; i < amountOfVertices; ++i) {
-        graph[i].resize(amountOfVertices);
-        for (int j = 0; j < graph[i].size(); ++j) {
-            graph[i][j] = 0;
-        }
-    }
-};
-
-void MatrixGraph::Print(int vertex) {
-    for (int i = 0; i < graph[vertex].size(); ++i) {
-        cout << i << ' '<< graph[vertex][i] << endl;
-    }
+ListGraph::ListGraph(int amountOfVertices) {
+    graph.reserve(amountOfVertices);
 }
 
-void MatrixGraph::AddAdjactencyEdgesToQueue(vector<pair<int, int>>& adjacentEdges, vector<bool>& isVisited, PriorityQueue& queue) { //обрабатывает рёбра из adjacentEdges
-    for (auto i : adjacentEdges) { //проходимся по смежным рёбрам
-        if (!isVisited[i.first]) { //если второй конец не посещён
-            if (queue.IsVertexInPriorQueue(i.first)) { //если вершина в данный момент в очереди
-                queue.ChangePriority(i.first, i.second); //пытаемся поменять её приоритет
-            } else {
-                queue.Push(i.first, i.second); //иначе добавляем элемент в очередь
-            }
-        }
-    }
-}
-
-int MatrixGraph::VerticesCount() {
+int ListGraph::VerticesCount() const{
     return graph.size();
 }
 
-void MatrixGraph::AddEdge(int from, int to, int weight) {
-    if (graph[from][to] == 0) {
-        graph[from][to] = weight;
-        graph[to][from] = weight;
-    } else {
-        if (graph[from][to] > weight) {
-            graph[from][to] = weight;
-            graph[to][from] = weight;
-        }
+void ListGraph::GetNextVertices(int vertex, vector<int>& nextVertices) const {
+    vector<pair<int, int>> nextEdges;
+    GetAdjactencyEdges(vertex, nextEdges); //берём следующие рёбра
+    for (auto i : nextEdges) {
+        nextVertices.push_back(i.first); //добавляем вторые концы выбранных рёбер
     }
 }
 
-void MatrixGraph::GetNextVertices(int vertex, vector<pair<int, int>>& nextVertices) {
-    for (int i = 0; i < graph[vertex].size(); ++i) {
-        if (graph[vertex][i] != 0) {
-            nextVertices.push_back({i, graph[vertex][i]});
-        }
+void ListGraph::AddEdge(int from, int to, int weight) {
+    if (from != to) {
+        graph[from].emplace_back(to, weight);
+        graph[to].emplace_back(from, weight);
     }
 }
 
-int MatrixGraph::MinOstWeight(int startVertex, int amountOfVertices) {
+void ListGraph::GetAdjactencyEdges(int vertex, vector<pair<int, int>> &nextVertices) const {
+    nextVertices = graph[vertex];
+}
+
+int ListGraph::MinOstWeight(int startVertex, int amountOfVertices) {
     PriorityQueue queue(amountOfVertices);
     int amountOfVisitedVertices = 1;
-    vector<bool> isVisited(amountOfVertices, 0);
-    isVisited[startVertex] = 1; // явно говорим, что вершина посещена
-    vector<pair<int, int>> adjacentEdges; //вектор пар <int, int>, первое - вершина, второе - масса ребра
-    int minWeight = 0; //вес минимального остовного дерева
+    vector<bool> isVisited (amountOfVertices, false);
+    isVisited[startVertex] = true;
+    vector<pair<int, int>> adjacentEdges;
+    int minWeight = 0;
     int vertex = startVertex;
     pair<int, int> minEdge = {startVertex, 0};
-    while (amountOfVisitedVertices != graph.size()) { //пока не посетим все вершины
-        GetNextVertices(vertex, adjacentEdges); //находим смежные рёбра для вершины vertex
-        AddAdjactencyEdgesToQueue(adjacentEdges, isVisited, queue);//обрабатывает рёбра из вектора adjacentEdges
+    while (amountOfVisitedVertices != amountOfVertices) {
+        GetAdjactencyEdges(vertex, adjacentEdges);
+        for (int i = 0; i < graph[vertex].size(); ++i) {
+            if (!isVisited[graph[vertex][i].first]) {
+                if (queue.IsVertexInPriorQueue(graph[vertex][i].first)) { //если вершина в данный момент в очереди
+                    queue.ChangePriority(graph[vertex][i].first, graph[vertex][i].second); //пытаемся поменять её приоритет
+                } else {
+                    queue.Push(graph[vertex][i].first, graph[vertex][i].second); //иначе добавляем элемент в очередь
+                }
+            }
+        }
         minEdge = queue.ExtractMin(); //извлекаем минимальное ребро
         minWeight += minEdge.second; //увеличиваем массу минимального остовного дерева
         ++amountOfVisitedVertices; //помечаем вершину посещённой
@@ -182,7 +165,7 @@ int MatrixGraph::MinOstWeight(int startVertex, int amountOfVertices) {
 int main() {
     int amountOfVertices, amountOfEdges;
     cin >> amountOfVertices >> amountOfEdges;
-    MatrixGraph graph(amountOfVertices);
+    ListGraph graph(amountOfVertices);
     for (int i = 0; i < amountOfEdges; ++i) {
         int from, to, weight;
         cin >> from >> to >> weight;
@@ -191,6 +174,5 @@ int main() {
         }
     }
     cout << graph.MinOstWeight(0, amountOfVertices);
-    //graph.Print(5);
     return 0;
 }
