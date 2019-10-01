@@ -9,7 +9,7 @@ private:
 public:
     ListGraph(const IGraph * g);
     ListGraph(int numberOfVertices);
-    ~ListGraph();
+    ~ListGraph() {};
     int VerticesCount() const;
     void AddEdge(int from, int to);
     void GetNextVertices(int vertex, vector<int> &vertices) const;
