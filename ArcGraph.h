@@ -8,7 +8,7 @@ private:
 public:
     ArcGraph(const IGraph* g);
     ArcGraph(int numbOfVertices);
-    ~ArcGraph();
+    ~ArcGraph() {};
     int VerticesCount() const;
     void AddEdge(int from, int to);
     void GetNextVertices(int vertex, vector<int>& vertices) const;
