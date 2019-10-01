@@ -1,7 +1,3 @@
-//
-// Created by yaspa on 03.03.2019.
-//
-
 #include <iostream>
 #include "SetGraph.h"
 
