@@ -8,7 +8,7 @@ private:
 public:
     MatrixGraph(const IGraph* g);
     MatrixGraph(int numbOfVertices);
-    ~MatrixGraph();
+    ~MatrixGraph() {};
     int VerticesCount() const;
     void AddEdge(int from, int to);
     void GetNextVertices(int vertex, vector<int>& vertices) const;
