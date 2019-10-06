@@ -10,8 +10,6 @@ struct Node {
     string value;
     Node* left, *right;
     Node(const string& value);
-    void CountSize();
-    void Clear();
 };
 
 Node::Node(const string& val) {
@@ -22,25 +20,15 @@ Node::Node(const string& val) {
     sizeOfTree = 1;
 }
 
-
-void Node::CountSize() {
-    sizeOfTree = 1;
-    if (left) {
-        sizeOfTree += left->sizeOfTree;
+void CountSize(Node* node) {
+    node->sizeOfTree = 1;
+    if (node->left) {
+        node->sizeOfTree += node->left->sizeOfTree;
     }
-    if (right) {
-        sizeOfTree += right->sizeOfTree;
+    if (node->right) {
+        node->sizeOfTree += node->right->sizeOfTree;
     }
 }
-
-/*void Node::Clear() {
-    if (this == nullptr) {
-        return;
-    }
-    left->Clear();
-    right->Clear();
-    delete this;
-}*/
 
 class SuperStringArray {
 private:
@@ -110,14 +98,14 @@ pair<Node*, Node*> SuperStringArray::Split(Node *node, int position) {
     if (l >= position) {
         splittedPlace = Split(node->left, position);
         node->left = splittedPlace.second;
-        node->CountSize();
+        CountSize(node);
         return make_pair(splittedPlace.first, node);
     }
     else {
         int pos = position - l - 1;
         splittedPlace = Split(node->right, pos);
         node->right = splittedPlace.first;
-        node->CountSize();
+        CountSize(node);
         return make_pair(node, splittedPlace.second);
     }
 }
@@ -131,12 +119,12 @@ Node* SuperStringArray::Merge(Node *leftNode, Node *rightNode) {
     }
     if (leftNode->priority > rightNode->priority) {
         leftNode->right = Merge(leftNode->right, rightNode);
-        leftNode->CountSize();
+        CountSize(leftNode);
         return leftNode;
     }
     else {
         rightNode->left = Merge(leftNode, rightNode->left);
-        rightNode->CountSize();
+        CountSize(rightNode);
         return rightNode;
     }
 }
