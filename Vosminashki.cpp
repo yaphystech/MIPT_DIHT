@@ -89,7 +89,7 @@ bool State::isSolvable() const {
     return amount % 2 == 0;
 }
 
-Solution FindSolution(const State& firstState, vector<State*>& isVisited) { //ищет решение
+Solution FindSolution(const State& firstState, vector<State*>& visitedStates) { //ищет решение
     vector<State*> layer;
     vector<State*> nextlayer;
     vector<State*> nextStates;
@@ -118,7 +118,7 @@ Solution FindSolution(const State& firstState, vector<State*>& isVisited) { //и
                                 return sol;
                             } else {
                                 nextlayer.push_back(nextStates[j]);
-                                isVisited.push_back(nextStates[j]);
+                                visitedStates.push_back(nextStates[j]);
                                 s.insert(nextStates[j]->stat);
                             }
                         }
@@ -149,10 +149,10 @@ int main() {
         }
     }
     State firstState(firstStr, "", posOfZero);
-    vector<State*> isVisited;
-    Solution answer = FindSolution(firstState, isVisited);
-    for (int i = 0; i < isVisited.size(); ++i) {
-        delete(isVisited[i]);
+    vector<State*> visitedStates;
+    Solution answer = FindSolution(firstState, visitedStates);
+    for (int i = 0; i < visitedStates.size(); ++i) {
+        delete(visitedStates[i]);
     }
     if (answer.direction == "-1") {
         cout << "-1";
