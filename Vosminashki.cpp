@@ -24,7 +24,7 @@ struct State {
     explicit State (State& prevStat, char direction, int newPosOfZero);
     void Print ();
     bool isSolvable() const;
-    void GetNextStates(vector<State>& nextStates, State& state);
+    void GetNextStates(vector<State*>& nextStates, State& state);
 };
 
 void State::Print() {
@@ -44,31 +44,31 @@ State::State(State &prevStat, char direction, int pOfZero) {
     way = prevStat.way + direction;
 }
 
-void State::GetNextStates(vector<State> &nextStates, State& state) {
+void State::GetNextStates(vector<State*> &nextStates, State& state) {
     char destination = ' ';
     int pOfZero = 0;
     if (posOfZero / 3 > 0) {
         destination = 'U';
         pOfZero = state.posOfZero - 3;
-        State next1(state, destination, pOfZero);
+        State* next1 = new State (state, destination, pOfZero);
         nextStates.push_back(next1);
     }
     if (posOfZero / 3 < 2) {
         destination = 'D';
         pOfZero = state.posOfZero + 3;
-        State next1(state, destination, pOfZero);
+        State* next1 = new State(state, destination, pOfZero);
         nextStates.push_back(next1);
     }
     if (posOfZero % 3 < 2) {
         destination = 'R';
         pOfZero = state.posOfZero + 1;
-        State next1(state, destination, pOfZero);
+        State* next1 = new State(state, destination, pOfZero);
         nextStates.push_back(next1);
     }
     if (posOfZero % 3 > 0) {
         destination = 'L';
         pOfZero = state.posOfZero - 1;
-        State next1(state, destination, pOfZero);
+        State* next1 = new State(state, destination, pOfZero);
         nextStates.push_back(next1);
     }
 }
@@ -89,15 +89,15 @@ bool State::isSolvable() const {
     return amount % 2 == 0;
 }
 
-Solution FindSolution(const State& firstState) { //ищет решение
-    vector<State> layer;
-    vector<State> nextlayer;
-    vector<State> nextStates;
+Solution FindSolution(const State& firstState, vector<State*>& isVisited) { //ищет решение
+    vector<State*> layer;
+    vector<State*> nextlayer;
+    vector<State*> nextStates;
     unordered_set<string> s;
     string finalStr = "123456780";
     int amountOfWays = 0;
     State fState = firstState;
-    if (fState.stat == finalStr) {
+    if (firstState.stat == finalStr) {
         Solution sol (amountOfWays, fState.way);
         return sol;
     } else {
@@ -106,19 +106,20 @@ Solution FindSolution(const State& firstState) { //ищет решение
             return sol;
         } else {
             s.insert(fState.stat);
-            layer.push_back(fState);
+            layer.push_back(&fState);
             while (layer.size() != 0) {
                 ++amountOfWays;
                 for (int i = 0; i < layer.size(); ++i) {
-                    layer[i].GetNextStates(nextStates, layer[i]);
+                    layer[i]->GetNextStates(nextStates, *layer[i]);
                     for (int j = 0; j < nextStates.size(); ++j) {
-                        if (s.count(nextStates[j].stat) == 0) {
-                            if (nextStates[j].stat == finalStr) {
-                                Solution sol (amountOfWays, nextStates[j].way);
+                        if (s.count(nextStates[j]->stat) == 0) {
+                            if (nextStates[j]->stat == finalStr) {
+                                Solution sol (amountOfWays, nextStates[j]->way);
                                 return sol;
                             } else {
                                 nextlayer.push_back(nextStates[j]);
-                                s.insert(nextStates[j].stat);
+                                isVisited.push_back(nextStates[j]);
+                                s.insert(nextStates[j]->stat);
                             }
                         }
                     }
@@ -148,7 +149,11 @@ int main() {
         }
     }
     State firstState(firstStr, "", posOfZero);
-    Solution answer = FindSolution(firstState);
+    vector<State*> isVisited;
+    Solution answer = FindSolution(firstState, isVisited);
+    for (int i = 0; i < isVisited.size(); ++i) {
+        delete(isVisited[i]);
+    }
     if (answer.direction == "-1") {
         cout << "-1";
     } else {
