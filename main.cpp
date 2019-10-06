@@ -6,7 +6,7 @@
 #include "MatrixGraph.h"
 #include <assert.h>
 
-void test1() {
+void AreOperationsDoingTheSame1() {
     vector<int> nextVertices1;
     vector<int> nextVertices2;
     vector<int> nextVertices3;
@@ -94,7 +94,7 @@ void test1() {
     }
 }
 
-void test2() {
+void AreOperationsDoingTheSame() {
     vector<int> nextVertices1;
     vector<int> nextVertices2;
     vector<int> nextVertices3;
@@ -184,7 +184,7 @@ void test2() {
     }
 }
 
-void test3() {
+void AreOperationsDoingTheSame3() {
     vector<int> nextVertices1;
     vector<int> nextVertices2;
     vector<int> nextVertices3;
@@ -277,8 +277,8 @@ void test3() {
 }
 
 int main() {
-    test1();
-    test2();
-    test3();
+    AreOperationsDoingTheSame1();
+    AreOperationsDoingTheSame2();
+    AreOperationsDoingTheSame3();
     return 0;
 }
