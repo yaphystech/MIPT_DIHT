@@ -7,14 +7,6 @@
 #include <assert.h>
 
 void AreOperationsDoingTheSame1() {
-    vector<int> nextVertices1;
-    vector<int> nextVertices2;
-    vector<int> nextVertices3;
-    vector<int> nextVertices4;
-    vector<int> prevVertices1;
-    vector<int> prevVertices2;
-    vector<int> prevVertices3;
-    vector<int> prevVertices4;
     int amountOfVertices = 4;
     int amountOfEdges = 3;
     ArcGraph arcGraph (amountOfVertices);
@@ -24,13 +16,21 @@ void AreOperationsDoingTheSame1() {
     SetGraph setGraph (&arcGraph);
     MatrixGraph matrixGraph (&arcGraph);
     ListGraph listGraph (&arcGraph);
+    vector<int> nextVertices1;
     arcGraph.GetNextVertices(0, nextVertices1);
+    vector<int> nextVertices2;
     setGraph.GetNextVertices(0, nextVertices2);
+    vector<int> nextVertices3;
     matrixGraph.GetNextVertices(0, nextVertices3);
+    vector<int> nextVertices4;
     listGraph.GetNextVertices(0, nextVertices4);
+    vector<int> prevVertices1;
     arcGraph.GetPrevVertices(3, prevVertices1);
+    vector<int> prevVertices2;
     setGraph.GetPrevVertices(3, prevVertices2);
+    vector<int> prevVertices3;
     matrixGraph.GetPrevVertices(3, prevVertices3);
+    vector<int> prevVertices4;
     listGraph.GetPrevVertices(3, prevVertices4);
     for (auto i : nextVertices1) {
         int flag = 0;
@@ -95,14 +95,6 @@ void AreOperationsDoingTheSame1() {
 }
 
 void AreOperationsDoingTheSame() {
-    vector<int> nextVertices1;
-    vector<int> nextVertices2;
-    vector<int> nextVertices3;
-    vector<int> nextVertices4;
-    vector<int> prevVertices1;
-    vector<int> prevVertices2;
-    vector<int> prevVertices3;
-    vector<int> prevVertices4;
     int amountOfVertices = 5;
     int amountOfEdges = 4;
     ArcGraph arcGraph (amountOfVertices);
@@ -114,13 +106,21 @@ void AreOperationsDoingTheSame() {
     SetGraph setGraph (&arcGraph);
     MatrixGraph matrixGraph (&arcGraph);
     ListGraph listGraph (&arcGraph);
+    vector<int> nextVertices1;
     arcGraph.GetNextVertices(0, nextVertices1);
+    vector<int> nextVertices2;
     setGraph.GetNextVertices(0, nextVertices2);
+    vector<int> nextVertices3;
     matrixGraph.GetNextVertices(0, nextVertices3);
+    vector<int> nextVertices4;
     listGraph.GetNextVertices(0, nextVertices4);
+    vector<int> prevVertices1;
     arcGraph.GetPrevVertices(3, prevVertices1);
+    vector<int> prevVertices2;
     setGraph.GetPrevVertices(3, prevVertices2);
+    vector<int> prevVertices3;
     matrixGraph.GetPrevVertices(3, prevVertices3);
+    vector<int> prevVertices4;
     listGraph.GetPrevVertices(3, prevVertices4);
     for (auto i : nextVertices1) {
         int flag = 0;
@@ -185,14 +185,6 @@ void AreOperationsDoingTheSame() {
 }
 
 void AreOperationsDoingTheSame3() {
-    vector<int> nextVertices1;
-    vector<int> nextVertices2;
-    vector<int> nextVertices3;
-    vector<int> nextVertices4;
-    vector<int> prevVertices1;
-    vector<int> prevVertices2;
-    vector<int> prevVertices3;
-    vector<int> prevVertices4;
     int amountOfVertices = 7;
     int amountOfEdges = 7;
     ArcGraph arcGraph (amountOfVertices);
@@ -206,14 +198,22 @@ void AreOperationsDoingTheSame3() {
     SetGraph setGraph (&arcGraph);
     MatrixGraph matrixGraph (&arcGraph);
     ListGraph listGraph (&arcGraph);
+    vector<int> nextVertices1;
     arcGraph.GetNextVertices(0, nextVertices1);
+    vector<int> nextVertices2;
     setGraph.GetNextVertices(0, nextVertices2);
+    vector<int> nextVertices3;
     matrixGraph.GetNextVertices(0, nextVertices3);
+    vector<int> nextVertices4;
     listGraph.GetNextVertices(0, nextVertices4);
-    arcGraph.GetPrevVertices(2, prevVertices1);
-    setGraph.GetPrevVertices(2, prevVertices2);
-    matrixGraph.GetPrevVertices(2, prevVertices3);
-    listGraph.GetPrevVertices(2, prevVertices4);
+    vector<int> prevVertices1;
+    arcGraph.GetPrevVertices(3, prevVertices1);
+    vector<int> prevVertices2;
+    setGraph.GetPrevVertices(3, prevVertices2);
+    vector<int> prevVertices3;
+    matrixGraph.GetPrevVertices(3, prevVertices3);
+    vector<int> prevVertices4;
+    listGraph.GetPrevVertices(3, prevVertices4);
     for (auto i : nextVertices1) {
         int flag = 0;
         for (auto j : nextVertices2) {
