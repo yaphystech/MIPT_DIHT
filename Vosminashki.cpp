@@ -97,7 +97,7 @@ Solution FindSolution(const State& firstState) { //ищет решение
     string finalStr = "123456780";
     int amountOfWays = 0;
     State fState = firstState;
-    if (firstState.stat == finalStr) {
+    if (fState.stat == finalStr) {
         Solution sol (amountOfWays, fState.way);
         return sol;
     } else {
