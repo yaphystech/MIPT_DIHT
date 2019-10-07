@@ -73,7 +73,6 @@ int main() {
                 graph.AddEdge(i, j, 1);
             }
         }
-
     }
     cout << ((FordBellman(graph)) ? "YES" : "NO");
     return 0;
