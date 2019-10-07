@@ -56,7 +56,8 @@ int NumbersOfWays(const ListGraph& myGraph, int& start, int& end) {
         myGraph.GetNextVertices(cur, vertices);
         for (int i : vertices) {
             if (states[i].depth == 0) {
-                states[i] = State(states[cur].depth + 1, states[cur].paths); bfsQueue.push(i);
+                states[i] = State(states[cur].depth + 1, states[cur].paths); 
+                bfsQueue.push(i);
             }
             else if (states[i].depth == states[cur].depth + 1) {
                 states[i].paths += states[cur].paths;
