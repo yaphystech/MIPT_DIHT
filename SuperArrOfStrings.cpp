@@ -10,6 +10,8 @@ struct Node {
     string value;
     Node* left, *right;
     Node(const string& value);
+    void CountSize();
+    void Clear();
 };
 
 Node::Node(const string& val) {
@@ -20,15 +22,25 @@ Node::Node(const string& val) {
     sizeOfTree = 1;
 }
 
-void CountSize(Node* node) {
-    node->sizeOfTree = 1;
-    if (node->left) {
-        node->sizeOfTree += node->left->sizeOfTree;
+
+void Node::CountSize() {
+    sizeOfTree = 1;
+    if (left) {
+        sizeOfTree += left->sizeOfTree;
     }
-    if (node->right) {
-        node->sizeOfTree += node->right->sizeOfTree;
+    if (right) {
+        sizeOfTree += right->sizeOfTree;
     }
 }
+
+/*void Node::Clear() {
+    if (this == nullptr) {
+        return;
+    }
+    left->Clear();
+    right->Clear();
+    delete this;
+}*/
 
 class SuperStringArray {
 private:
@@ -78,7 +90,10 @@ void SuperStringArray::DeleteAt(int position) {
 string SuperStringArray::GetAt(int position) const {
     Node* node = root;
     while(node) {
-        int l = (node->left != nullptr) ? (node->left->sizeOfTree) : 0;
+    	int l = 0;
+    	if (node->left) {
+    		l = node->left->sizeOfTree;
+        }
         if (l == position) break;
         if (position > l) { position -= l + 1; node = node->right; }
         else node = node->left;
@@ -98,14 +113,14 @@ pair<Node*, Node*> SuperStringArray::Split(Node *node, int position) {
     if (l >= position) {
         splittedPlace = Split(node->left, position);
         node->left = splittedPlace.second;
-        CountSize(node);
+        node->CountSize();
         return make_pair(splittedPlace.first, node);
     }
     else {
         int pos = position - l - 1;
         splittedPlace = Split(node->right, pos);
         node->right = splittedPlace.first;
-        CountSize(node);
+        node->CountSize();
         return make_pair(node, splittedPlace.second);
     }
 }
@@ -119,12 +134,12 @@ Node* SuperStringArray::Merge(Node *leftNode, Node *rightNode) {
     }
     if (leftNode->priority > rightNode->priority) {
         leftNode->right = Merge(leftNode->right, rightNode);
-        CountSize(leftNode);
+        leftNode->CountSize();
         return leftNode;
     }
     else {
         rightNode->left = Merge(leftNode, rightNode->left);
-        CountSize(rightNode);
+        rightNode->CountSize();
         return rightNode;
     }
 }
